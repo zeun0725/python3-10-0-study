@@ -52,13 +52,15 @@ if __name__ == "__main__":
         :param _id:
         :return:
         데이터가 없으면 더이상 File이 써지지 않음
-        오래된 파일 삭제 test
+        오래된 파일 삭제 test => vaccume() 7days data
+        check_point/commits, offsets 안에 오래된 offset 지워도 되는듯
         """
         df = df.withColumn('max_timestamp', F.max(F.col('timestamp')).over(window.Window.partitionBy(F.col('ctlg_seq'))))
         write_df = df.where(F.col('timestamp') == F.col('max_timestamp')).drop('max_timestamp')
 
         try:
             deltaTable = DeltaTable.forPath(spark, 'jieun/test2')
+            deltaTable.vacuum()
             deltaTable.alias('old').merge(
                 write_df.alias('new'),
                 "old.ctlg_seq = new.ctlg_seq"
