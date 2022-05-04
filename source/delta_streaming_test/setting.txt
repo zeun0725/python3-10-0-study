@@ -1,0 +1,21 @@
+# zookeeper start
+bin/zookeeper-server-start.sh -daemon config/zookeeper.properties
+
+# kafka start
+bin/kafka-server-start.sh -daemon config/server.properties
+
+# kafka topic create
+bin/kafka-topics.sh --create --topic cdc_mysql_index.test.ctlg --bootstrap-server localhost:9092 --partitions 10
+실행 결과
+=> WARNING: Due to limitations in metric names, topics with a period ('.') or underscore ('_') could collide. To avoid issues it is best to use either, but not both.
+=> Created topic cdc_mysql_index.test.ctlg.
+
+# kafka topic describe
+bin/kafka-topics.sh --describe --topic cdc_mysql_index.test.ctlg --bootstrap-server localhost:9092
+
+# kafka consumer start
+bin/kafka-console-consumer.sh --topic cdc_mysql_index.test.ctlg --from-beginning --bootstrap-server localhost:9092
+
+# kafka topic delete
+# server.properties => delete.topic.enable = true
+bin/kafka-topics.sh --delete --bootstrap-server localhost:9092 --topic cdc_mysql_index.test.ctlg
