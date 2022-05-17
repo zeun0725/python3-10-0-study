@@ -40,11 +40,11 @@ if __name__ == "__main__":
     df2 = df.where(F.col('value').isNotNull()).withColumn('ctlg_info', get_ctlg_info(F.col('value')))
 
     df2 = df2.select(
-        F.col('timestamp'),
-        F.col('ctlg_info.ctlg_seq'),
-        F.col('ctlg_info.svc_yn'),
-        F.col('ctlg_info.op')
-    )
+                            F.col('timestamp'),
+                            F.col('ctlg_info.ctlg_seq'),
+                            F.col('ctlg_info.svc_yn'),
+                            F.col('ctlg_info.op')
+                        )
 
     def write_batch(df, _id):
         """
@@ -62,11 +62,11 @@ if __name__ == "__main__":
             deltaTable = DeltaTable.forPath(spark, 'jieun/test2')
             deltaTable.vacuum()
             deltaTable.alias('old').merge(
-                write_df.alias('new'),
-                "old.ctlg_seq = new.ctlg_seq"
-            ).whenMatchedUpdate(
-                set={"svc_yn": F.col("new.svc_yn"), "op": F.col('new.op')}
-            ).whenNotMatchedInsertAll().execute()
+                                    write_df.alias('new'),
+                                    "old.ctlg_seq = new.ctlg_seq"
+                                ).whenMatchedUpdate(
+                                    set={"svc_yn": F.col("new.svc_yn"), "op": F.col('new.op')}
+                                ).whenNotMatchedInsertAll().execute()
 
             deltaTable.delete(condition=F.col('op') == 'd')
             new_df = deltaTable.toDF()
