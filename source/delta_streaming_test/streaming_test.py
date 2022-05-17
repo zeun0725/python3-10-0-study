@@ -23,7 +23,7 @@ if __name__ == "__main__":
             "enable.auto.commit": False
         }
     ).load()
-
+    
     @F.udf(returnType=T.StructType([
         T.StructField('ctlg_seq', T.StringType()),
         T.StructField('svc_yn', T.StringType()),
