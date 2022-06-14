@@ -8,6 +8,7 @@ import os
 import json
 from delta.tables import *
 
+# 델타레이크 upsert 성능 이슈가 있다.
 kafka_brokers = "localhost:9092"
 
 if __name__ == "__main__":
